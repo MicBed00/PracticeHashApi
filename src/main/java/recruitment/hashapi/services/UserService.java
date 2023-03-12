@@ -22,13 +22,9 @@ public class UserService {
     @Autowired
     public static UserInterface ui;
 
-    @Autowired
-    Page page;
-
-    public UserService(UserRepositorie userRepositorie, UserInterface ui, Page page) {
+    public UserService(UserRepositorie userRepositorie, UserInterface ui) {
         this.userRepositorie = userRepositorie;
         this.ui = ui;
-        this.page = page;
     }
 
     public List<User> getUsers() {

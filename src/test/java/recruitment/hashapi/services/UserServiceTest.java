@@ -34,14 +34,11 @@ class UserServiceTest {
     @Mock
     UserInterface ui;
 
-    @Mock
-    Page page;
-
     UserService service;
 
     @BeforeEach
     void setUp() {
-        service = new UserService(repositorie, ui, page);
+        service = new UserService(repositorie, ui);
     }
 
     @Test

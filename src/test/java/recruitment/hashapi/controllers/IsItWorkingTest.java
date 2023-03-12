@@ -25,9 +25,6 @@ class IsItWorkingTest {
     @Autowired
     private TestRestTemplate template;
 
-    @Autowired
-    Page page;
-
     @Test
     public void returnsProperAnswer() {
         ResponseEntity<String> response = template.getForEntity("/isItWorking", String.class);
