@@ -1,23 +1,21 @@
 package recruitment.hashapi.controllers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import recruitment.hashapi.models.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static recruitment.hashapi.controllers.IsItWorkingTest.Page.Pageable.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IsItWorkingTest {
@@ -86,25 +84,56 @@ class IsItWorkingTest {
         assertThat(response.getBody()).isEqualTo("recruitment.hashapi.exceptions.UserException: No user with id 6");
     }
 
-//    @Test
-//    public void returnUserPages() {
-//        //given
-//        User user = new User("Kowalsky", "John");
+    @Test
+    public void returnUserPages() {
+        //given
+        User user = new User("Kowalsky", "John");
 //        Page<User> expectedPage = new PageImpl<>(Collections.singletonList(user), PageRequest.of(0, 3), 1);
-//        //when
+        //when
 ////    ResponseEntity<Page> response = template.getForEntity("/users/pages?page=0&size=3", Page.class);
-//        ResponseEntity<Page<User>> response = template.exchange("/users/pages?page=0&size=3",
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<Page<User>>() {
-//                });
-//
+        ResponseEntity<Page<User>> response = template.exchange("/users/pages?page=0&size=3",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Page<User>>() {
+                });
+
 //        //then
 //        assertThat(response.getHeaders().size()).isEqualTo(3);
-//        assertThat(response.getBody().getTotalPages()).isEqualTo(2);
-//        assertThat(response.getBody().getContent().get(0)).isEqualTo(user);
-//        assertThat(response.getBody()).isEqualTo(expectedPage);
-//    }
+        assertThat(response.getBody().totalPages).isEqualTo(2);
+//        assertThat(response.getBody().content.get(0)).isEqualTo(user);
+        //assertThat(response.getBody()).isEqualTo(expectedPage);
+    }
 
 
+    public static class Page<T> {
+
+        public List<T> content;
+        public Pageable pageable;
+        public boolean last;
+        public int totalElements;
+        public int totalPages;
+        public Sort sort;
+        public boolean first;
+        public int number;
+        public int numberOfElements;
+        public int size;
+        public boolean empty;
+
+        public static class Pageable {
+
+            public Sort sort;
+            public int pageNumber;
+            public int pageSize;
+            public int offset;
+            public boolean paged;
+            public boolean unpaged;
+
+            public static class Sort {
+
+                public boolean sorted;
+                public boolean unsorted;
+                public boolean empty;
+            }
+        }
+    }
 }
